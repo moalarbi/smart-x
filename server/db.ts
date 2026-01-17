@@ -90,3 +90,118 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // TODO: add feature queries here as your schema grows.
+
+// Calls queries
+export async function getCallsByCompany(companyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { calls } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  return db.select().from(calls).where(eq(calls.companyId, companyId)).limit(100);
+}
+
+export async function createCall(callData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { calls } = await import("../drizzle/schema");
+  const result = await db.insert(calls).values(callData);
+  return result;
+}
+
+// Messages queries
+export async function getMessagesByConversation(conversationId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { messages } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  return db.select().from(messages).where(eq(messages.conversationId, conversationId));
+}
+
+export async function createMessage(messageData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { messages } = await import("../drizzle/schema");
+  return db.insert(messages).values(messageData);
+}
+
+// Conversations queries
+export async function getConversationsByCompany(companyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { conversations } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  return db.select().from(conversations).where(eq(conversations.companyId, companyId));
+}
+
+export async function createConversation(conversationData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { conversations } = await import("../drizzle/schema");
+  return db.insert(conversations).values(conversationData);
+}
+
+// Unified Numbers queries
+export async function getNumbersByCompany(companyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { unifiedNumbers } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  return db.select().from(unifiedNumbers).where(eq(unifiedNumbers.companyId, companyId));
+}
+
+export async function createUnifiedNumber(numberData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { unifiedNumbers } = await import("../drizzle/schema");
+  return db.insert(unifiedNumbers).values(numberData);
+}
+
+// Reports queries
+export async function getReportsByCompany(companyId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { reports } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  return db.select().from(reports).where(eq(reports.companyId, companyId));
+}
+
+export async function createReport(reportData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { reports } = await import("../drizzle/schema");
+  return db.insert(reports).values(reportData);
+}
+
+// Subscriptions queries
+export async function getSubscriptionByCompany(companyId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const { subscriptions } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  const result = await db.select().from(subscriptions).where(eq(subscriptions.companyId, companyId)).limit(1);
+  return result[0] || null;
+}
+
+export async function createSubscription(subscriptionData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { subscriptions } = await import("../drizzle/schema");
+  return db.insert(subscriptions).values(subscriptionData);
+}
+
+// Companies queries
+export async function getCompanyById(companyId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const { companies } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+  const result = await db.select().from(companies).where(eq(companies.id, companyId)).limit(1);
+  return result[0] || null;
+}
+
+export async function createCompany(companyData: any) {
+  const db = await getDb();
+  if (!db) return null;
+  const { companies } = await import("../drizzle/schema");
+  return db.insert(companies).values(companyData);
+}
