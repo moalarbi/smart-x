@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -15,10 +14,11 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  PhoneOff,
 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const menuItems = [
@@ -28,6 +28,26 @@ export default function Dashboard() {
     { icon: Users, label: "الفريق", href: "/team" },
     { icon: BarChart3, label: "التقارير", href: "/reports" },
     { icon: Settings, label: "الإعدادات", href: "/settings" },
+  ];
+
+  const stats = [
+    { label: "إجمالي المكالمات", value: "1,234", change: "+12%", icon: Phone, color: "red" },
+    { label: "المحادثات النشطة", value: "45", change: "+5%", icon: MessageSquare, color: "blue" },
+    { label: "الفريق النشط", value: "23", change: "+2%", icon: Users, color: "green" },
+    { label: "معدل الرضا", value: "94%", change: "+3%", icon: TrendingUp, color: "purple" },
+  ];
+
+  const recentCalls = [
+    { id: 1, caller: "أحمد محمد", number: "+966501234567", duration: "5:23", status: "completed", time: "10:30 AM" },
+    { id: 2, caller: "فاطمة علي", number: "+966509876543", duration: "3:45", status: "completed", time: "10:15 AM" },
+    { id: 3, caller: "محمود سالم", number: "+966505555555", duration: "0:00", status: "missed", time: "09:50 AM" },
+    { id: 4, caller: "سارة حسن", number: "+966502222222", duration: "7:12", status: "completed", time: "09:30 AM" },
+  ];
+
+  const alerts = [
+    { id: 1, title: "مكالمة مفقودة", message: "تم تفويت مكالمة من محمود سالم", time: "منذ 40 دقيقة", type: "warning" },
+    { id: 2, title: "رسالة جديدة", message: "رسالة جديدة من أحمد محمد عبر WhatsApp", time: "منذ 15 دقيقة", type: "info" },
+    { id: 3, title: "تقرير يومي", message: "تم إنشاء التقرير اليومي بنجاح", time: "منذ 2 ساعة", type: "success" },
   ];
 
   return (
@@ -46,26 +66,24 @@ export default function Dashboard() {
         </div>
 
         <nav className="p-6 space-y-2">
-          {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              className="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-900 transition-colors"
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </a>
-          ))}
+          {menuItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <Link key={index} href={item.href}>
+                <a className="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-900 transition-colors cursor-pointer">
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </a>
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="absolute bottom-6 right-6 left-6">
-          <button
-            onClick={() => logout()}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-900 transition-colors border-t border-gray-800 pt-6"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>تسجيل الخروج</span>
-          </button>
+        <div className="absolute bottom-6 left-6 right-6">
+          <Button className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
+            <LogOut className="w-4 h-4 ml-2" />
+            تسجيل الخروج
+          </Button>
         </div>
       </aside>
 
@@ -73,221 +91,144 @@ export default function Dashboard() {
       <div className={`transition-all duration-300 ${sidebarOpen ? "mr-64" : "mr-0"}`}>
         {/* Top Bar */}
         <header className="bg-white border-b border-gray-300 sticky top-0 z-30">
-          <div className="px-6 py-4 flex justify-between items-center">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-gray-100 rounded"
-            >
-              {sidebarOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-
+          <div className="flex justify-between items-center p-6">
             <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="font-semibold">{user?.name}</p>
-                <p className="text-sm text-gray-600">{user?.email}</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-red-600"></div>
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 hover:bg-gray-100 rounded"
+              >
+                {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+              <h1 className="text-2xl font-bold">لوحة التحكم</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600">مرحباً، أحمد</span>
+              <div className="w-10 h-10 bg-red-600 rounded-full"></div>
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="p-6 md:p-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">لوحة التحكم</h1>
-            <p className="text-gray-700">مرحباً بك في Smart X</p>
-          </div>
-
+        <main className="p-6 md:p-8 space-y-6">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {[
-              {
-                icon: Phone,
-                label: "المكالمات اليومية",
-                value: "1,234",
-                change: "+12%",
-                color: "red",
-              },
-              {
-                icon: MessageSquare,
-                label: "الرسائل",
-                value: "5,678",
-                change: "+8%",
-                color: "blue",
-              },
-              {
-                icon: Users,
-                label: "المستخدمين النشطين",
-                value: "45",
-                change: "+3%",
-                color: "green",
-              },
-              {
-                icon: TrendingUp,
-                label: "معدل الرضا",
-                value: "94%",
-                change: "+2%",
-                color: "purple",
-              },
-            ].map((stat, index) => (
-              <Card
-                key={index}
-                className="p-6 border border-gray-300 hover:border-red-600 transition-all"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold">{stat.value}</p>
-                    <p className="text-green-600 text-sm mt-2">{stat.change}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={index} className="p-6 border border-gray-300">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
+                      <p className="text-3xl font-bold">{stat.value}</p>
+                    </div>
+                    <div className={`p-3 rounded ${
+                      stat.color === "red" ? "bg-red-100" :
+                      stat.color === "blue" ? "bg-blue-100" :
+                      stat.color === "green" ? "bg-green-100" :
+                      "bg-purple-100"
+                    }`}>
+                      <Icon className={`w-6 h-6 ${
+                        stat.color === "red" ? "text-red-600" :
+                        stat.color === "blue" ? "text-blue-600" :
+                        stat.color === "green" ? "text-green-600" :
+                        "text-purple-600"
+                      }`} />
+                    </div>
                   </div>
-                  <stat.icon className="w-8 h-8 text-red-600 opacity-20" />
-                </div>
-              </Card>
-            ))}
+                  <p className="text-green-600 text-sm font-semibold">{stat.change}</p>
+                </Card>
+              );
+            })}
           </div>
 
-          {/* Main Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Recent Calls */}
-            <div className="lg:col-span-2">
-              <Card className="p-6 border border-gray-300">
-                <h2 className="text-xl font-bold mb-4">المكالمات الأخيرة</h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-300">
-                        <th className="text-right py-3 px-4 font-semibold">
-                          المتصل
-                        </th>
-                        <th className="text-right py-3 px-4 font-semibold">
-                          المدة
-                        </th>
-                        <th className="text-right py-3 px-4 font-semibold">
-                          الحالة
-                        </th>
-                        <th className="text-right py-3 px-4 font-semibold">
-                          الوقت
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        {
-                          caller: "أحمد محمد",
-                          duration: "5:23",
-                          status: "مكتملة",
-                          time: "10:30 AM",
-                        },
-                        {
-                          caller: "فاطمة علي",
-                          duration: "3:45",
-                          status: "مكتملة",
-                          time: "10:15 AM",
-                        },
-                        {
-                          caller: "محمود سالم",
-                          duration: "7:12",
-                          status: "مكتملة",
-                          time: "09:50 AM",
-                        },
-                        {
-                          caller: "سارة حسن",
-                          duration: "2:30",
-                          status: "مكتملة",
-                          time: "09:30 AM",
-                        },
-                      ].map((call, index) => (
-                        <tr
-                          key={index}
-                          className="border-b border-gray-200 hover:bg-gray-50"
-                        >
-                          <td className="py-3 px-4">{call.caller}</td>
-                          <td className="py-3 px-4">{call.duration}</td>
-                          <td className="py-3 px-4">
-                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded bg-green-100 text-green-700 text-sm">
-                              <CheckCircle className="w-4 h-4" />
-                              {call.status}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-gray-600">
-                            {call.time}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
+          {/* Recent Calls Table */}
+          <Card className="p-6 border border-gray-300">
+            <h2 className="text-xl font-bold mb-4">آخر المكالمات</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-300">
+                    <th className="text-right py-3 px-4 font-semibold">المتصل</th>
+                    <th className="text-right py-3 px-4 font-semibold">الرقم</th>
+                    <th className="text-right py-3 px-4 font-semibold">المدة</th>
+                    <th className="text-right py-3 px-4 font-semibold">الحالة</th>
+                    <th className="text-right py-3 px-4 font-semibold">الوقت</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentCalls.map((call) => (
+                    <tr key={call.id} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="py-3 px-4">{call.caller}</td>
+                      <td className="py-3 px-4 text-gray-600">{call.number}</td>
+                      <td className="py-3 px-4 font-semibold">{call.duration}</td>
+                      <td className="py-3 px-4">
+                        <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-semibold ${
+                          call.status === "completed" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                        }`}>
+                          {call.status === "completed" ? "مكتملة" : "مفقودة"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-gray-600">{call.time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          </Card>
+
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Alerts */}
+            <Card className="lg:col-span-2 p-6 border border-gray-300">
+              <h2 className="text-xl font-bold mb-4">التنبيهات والإشعارات</h2>
+              <div className="space-y-3">
+                {alerts.map((alert) => (
+                  <div key={alert.id} className="flex gap-4 p-4 bg-gray-50 rounded border border-gray-200">
+                    <div className={`p-2 rounded ${
+                      alert.type === "warning" ? "bg-yellow-100" :
+                      alert.type === "info" ? "bg-blue-100" :
+                      "bg-green-100"
+                    }`}>
+                      {alert.type === "warning" ? <AlertCircle className="w-5 h-5 text-yellow-600" /> :
+                       alert.type === "info" ? <Clock className="w-5 h-5 text-blue-600" /> :
+                       <CheckCircle className="w-5 h-5 text-green-600" />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold">{alert.title}</p>
+                      <p className="text-sm text-gray-600">{alert.message}</p>
+                      <p className="text-xs text-gray-500 mt-1">{alert.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
             {/* Quick Actions */}
-            <div>
-              <Card className="p-6 border border-gray-300 mb-6">
-                <h2 className="text-xl font-bold mb-4">الإجراءات السريعة</h2>
-                <div className="space-y-3">
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white justify-start">
-                    <Phone className="w-4 h-4 ml-2" />
-                    مكالمة جديدة
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full border-black text-black hover:bg-black hover:text-white justify-start"
-                  >
-                    <MessageSquare className="w-4 h-4 ml-2" />
-                    رسالة جديدة
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full border-black text-black hover:bg-black hover:text-white justify-start"
-                  >
-                    <BarChart3 className="w-4 h-4 ml-2" />
-                    عرض التقارير
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Alerts */}
-              <Card className="p-6 border border-gray-300">
-                <h2 className="text-xl font-bold mb-4">التنبيهات</h2>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded border border-yellow-200">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-sm">
-                        استهلاك الحزمة مرتفع
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        تم استهلاك 85% من الحزمة
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded border border-blue-200">
-                    <Clock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-sm">
-                        تحديث النظام متاح
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        نسخة جديدة متاحة للتحديث
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
+            <Card className="p-6 border border-gray-300">
+              <h2 className="text-xl font-bold mb-4">إجراءات سريعة</h2>
+              <div className="space-y-3">
+                <Button className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
+                  <Phone className="w-4 h-4 ml-2" />
+                  مكالمة جديدة
+                </Button>
+                <Button variant="outline" className="w-full border-black text-black hover:bg-black hover:text-white justify-center">
+                  <MessageSquare className="w-4 h-4 ml-2" />
+                  رسالة جديدة
+                </Button>
+                <Button variant="outline" className="w-full border-black text-black hover:bg-black hover:text-white justify-center">
+                  <BarChart3 className="w-4 h-4 ml-2" />
+                  تقرير جديد
+                </Button>
+              </div>
+            </Card>
           </div>
 
           {/* Performance Chart */}
-          <Card className="p-6 border border-gray-300 mt-6">
-            <h2 className="text-xl font-bold mb-4">أداء المكالمات</h2>
+          <Card className="p-6 border border-gray-300">
+            <h2 className="text-xl font-bold mb-4">أداء اليوم</h2>
             <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
               <div className="text-center">
-                <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-2" />
                 <p className="text-gray-600">سيتم عرض الرسم البياني هنا</p>
               </div>
             </div>
