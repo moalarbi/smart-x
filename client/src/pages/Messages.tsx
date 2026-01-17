@@ -14,7 +14,6 @@ import {
   Search,
   Send,
   User,
-  MessageCircle,
   Mail,
   Instagram,
   Check,
@@ -164,11 +163,11 @@ export default function Messages() {
   const getChannelIcon = (channel: string) => {
     switch (channel) {
       case "whatsapp":
-        return <MessageCircle className="w-5 h-5 text-green-600" />;
+        return <MessageSquare className="w-5 h-5 text-green-600" />;
       case "email":
         return <Mail className="w-5 h-5 text-blue-600" />;
       case "sms":
-        return <MessageCircle className="w-5 h-5 text-purple-600" />;
+        return <MessageSquare className="w-5 h-5 text-purple-600" />;
       case "instagram":
         return <Instagram className="w-5 h-5 text-pink-600" />;
       case "telegram":
