@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useAuthState } from "@/hooks/useAuthState";
 import {
   BarChart3,
   Phone,
@@ -20,6 +22,13 @@ import { Link } from "wouter";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { user, logout } = useAuthState();
+  const [, setLocation] = useLocation();
+
+  const handleLogout = () => {
+    logout();
+    setLocation("/login");
+  };
 
   const menuItems = [
     { icon: BarChart3, label: "لوحة التحكم", href: "/dashboard" },
@@ -80,7 +89,7 @@ export default function Dashboard() {
         </nav>
 
         <div className="absolute bottom-6 left-6 right-6">
-          <Button className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
+          <Button onClick={handleLogout} className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
             <LogOut className="w-4 h-4 ml-2" />
             تسجيل الخروج
           </Button>
@@ -102,7 +111,7 @@ export default function Dashboard() {
               <h1 className="text-2xl font-bold">لوحة التحكم</h1>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">مرحباً، أحمد</span>
+              <span className="text-gray-600">مرحباً، {user?.username || "المستخدم"}</span>
               <div className="w-10 h-10 bg-red-600 rounded-full"></div>
             </div>
           </div>
@@ -207,7 +216,7 @@ export default function Dashboard() {
             <Card className="p-6 border border-gray-300">
               <h2 className="text-xl font-bold mb-4">إجراءات سريعة</h2>
               <div className="space-y-3">
-                <Button className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
+                <Button onClick={handleLogout} className="w-full bg-red-600 hover:bg-red-700 text-white justify-center">
                   <Phone className="w-4 h-4 ml-2" />
                   مكالمة جديدة
                 </Button>
