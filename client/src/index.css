@@ -179,4 +179,32 @@
       max-width: 1280px; /* Standard content width */
     }
   }
+
+  /* International Typographic Style Components */
+  .typography-hero {
+    @apply text-5xl md:text-6xl font-bold leading-tight tracking-tight;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  }
+
+  .typography-section-title {
+    @apply text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-8;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  }
+
+  .typography-subtitle {
+    @apply text-xl md:text-2xl font-light leading-relaxed;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  }
+
+  .divider-accent {
+    @apply w-16 h-1 bg-red-600 mb-6;
+  }
+
+  .section-spacing {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .grid-12 {
+    @apply grid grid-cols-12 gap-6 md:gap-8;
+  }
 }
